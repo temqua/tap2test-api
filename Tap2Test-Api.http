@@ -1,6 +1,16 @@
-@Tap2Test_Api_HostAddress = http://localhost:5153
+@baseUrl = http://localhost:5153/api
+@userId=30d81c58-222c-4973-bc0d-883161484ec7
 
-GET {{Tap2Test_Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
+GET {{baseUrl}}/users
 ###
+POST {{baseUrl}}/users
+Content-Type: application/x-www-form-urlencoded
+
+name=Иван+Иванов&email=ivan@example.com&phone=+79991234567&age=25
+###
+PUT {{baseUrl}}/users/{{userId}}
+Content-Type: application/x-www-form-urlencoded
+
+name=Иван+Иванов&email=ivan@example.com&phone=+79997654321&age=30
+###
+DELETE {{baseUrl}}/users/{{userId}} 
