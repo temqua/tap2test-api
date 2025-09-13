@@ -1,0 +1,13 @@
+services:
+  tap2test-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tap2test-api
+    ports:
+      - "8050:8050" # http
+      - "8051:8051" # можно использовать для https или другого сервиса
+    environment:
+      DOTNET_RUNNING_IN_CONTAINER: "true"
+      ASPNETCORE_URLS: "http://0.0.0.0:8050;http://0.0.0.0:8051"
+    restart: unless-stopped
