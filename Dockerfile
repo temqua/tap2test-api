@@ -22,4 +22,6 @@ RUN dotnet publish "./Tap2Test-Api.csproj" -c $BUILD_CONFIGURATION -o /app/publi
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN mkdir Images 
+RUN mkdir Videos
 ENTRYPOINT ["dotnet", "Tap2Test-Api.dll"]
