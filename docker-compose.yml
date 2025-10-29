@@ -5,9 +5,14 @@ services:
       dockerfile: Dockerfile
     container_name: tap2test-api
     ports:
-      - "8050:8050" # http
-      - "8051:8051" # можно использовать для https или другого сервиса
+      - "8050:8050"
+      - "8051:8051" 
+    volumes:
+      - /etc/ssl/certs/tap2test:/https:ro
+    env_file: .env
     environment:
       DOTNET_RUNNING_IN_CONTAINER: "true"
-      ASPNETCORE_URLS: "http://0.0.0.0:8050;http://0.0.0.0:8051"
+      ASPNETCORE_URLS: "http://0.0.0.0:8050;https://0.0.0.0:8051"
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/https/aspnetapp.pfx"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: "${CERT_PW}"  
     restart: unless-stopped
