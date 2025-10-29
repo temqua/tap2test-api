@@ -14,6 +14,14 @@ namespace Tap2Test_Api.Controllers
                 Directory.CreateDirectory(_videoPath);
         }
 
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var files = Directory.GetFiles(_videoPath)
+                     .Select(Path.GetFileName)
+                     .ToArray();
+            return Ok(files);
+        }
 
         [HttpGet("{fileName}")]
         public IActionResult GetVideo(string fileName)

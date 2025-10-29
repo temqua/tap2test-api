@@ -15,6 +15,15 @@ namespace Tap2Test_Api.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var files = Directory.GetFiles(_imagePath)
+                     .Select(Path.GetFileName)
+                     .ToArray();
+            return Ok(files);
+        }
+
         [HttpGet("{fileName}")]
         public IActionResult Get(string fileName)
         {
