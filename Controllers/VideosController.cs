@@ -35,7 +35,6 @@ namespace Tap2Test_Api.Controllers
             return PhysicalFile(filePath, contentType);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Upload(IFormFile file)
         {
@@ -68,6 +67,18 @@ namespace Tap2Test_Api.Controllers
             }
 
             return Ok(new { fileName });
+        }
+
+        [HttpDelete("{fileName}")]
+        public IActionResult Delete(string fileName)
+        {
+            var filePath = Path.Combine(_videoPath, fileName);
+            if (!System.IO.File.Exists(filePath))
+                return NotFound();
+
+
+            System.IO.File.Delete(filePath);
+            return NoContent();
         }
     }
 }
