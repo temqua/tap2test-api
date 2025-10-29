@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Tap2Test_Api.Data.Entities;
 
 namespace Tap2Test_Api.Dto
 {
@@ -20,5 +21,15 @@ namespace Tap2Test_Api.Dto
 
         [Range(0, 120)]
         public int Age { get; set; }
+
+        public User ToEntity() => new()
+        {
+            Id = Id,
+            Name = Name,
+            Email = Email,
+            Phone = Phone,
+            Age = Age
+        };
+
     }
 }

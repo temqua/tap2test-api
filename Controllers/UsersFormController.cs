@@ -5,15 +5,16 @@ using Tap2Test_Api.Dto;
 
 namespace Tap2Test_Api.Controllers
 {
-    [Route("api/users")]
+    [Route("api/users/form")]
     [ApiController]
-    public class UsersJsonController(AppDbContext context) : ControllerBase
+    public class UsersController(AppDbContext context) : ControllerBase
     {
 
         private readonly AppDbContext _context = context;
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] UserDto userDto)
+        [Consumes("application/x-www-form-urlencoded")]
+        public async Task<IActionResult> CreateUser([FromForm] UserDto userDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -28,7 +29,8 @@ namespace Tap2Test_Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserDto updatedDto)
+        [Consumes("application/x-www-form-urlencoded")]
+        public async Task<IActionResult> UpdateUser(Guid id, [FromForm] UserDto updatedDto)
         {
             var existing = await _context.Users.FindAsync(id);
             if (existing == null)
