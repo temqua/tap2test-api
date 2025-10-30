@@ -12,6 +12,7 @@ services:
       - ./Videos:/app/Videos/
       - ./Images:/app/Images/
     env_file: .env
+    privileged: true
     environment:
       DOTNET_RUNNING_IN_CONTAINER: "true"
       ASPNETCORE_URLS: "http://0.0.0.0:8050;https://0.0.0.0:8051"
