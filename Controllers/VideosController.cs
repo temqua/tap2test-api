@@ -39,9 +39,14 @@ namespace Tap2Test_Api.Controllers
         public async Task<IActionResult> Upload(IFormFile file)
         {
             if (file == null || file.Length == 0)
-                return BadRequest("File not provided");
+                return BadRequest(new { message = "File not provided" });
 
 
+            var isVideo = file.ContentType.Contains("video/");
+            if (!isVideo)
+            {
+                return BadRequest(new { message = "You must upload video" });
+            }
             var filePath = Path.Combine(_videoPath, file.FileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -60,7 +65,11 @@ namespace Tap2Test_Api.Controllers
             if (!System.IO.File.Exists(filePath))
                 return NotFound();
 
-
+            var isVideo = file.ContentType.Contains("video/");
+            if (!isVideo)
+            {
+                return BadRequest(new { message = "You must upload video" });
+            }
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
