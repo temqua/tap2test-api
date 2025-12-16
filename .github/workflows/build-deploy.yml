@@ -1,0 +1,46 @@
+name: Build & Deploy Tap2Test API
+
+on:
+    workflow_dispatch:
+
+jobs:
+    build-deploy:
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup SSH
+              uses: webfactory/ssh-agent@v0.9.1
+              with:
+                  ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+
+            - name: Add VPN server to known hosts
+              run: |
+                  mkdir -p ~/.ssh
+                  ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+            - name: Build image
+              run: |
+                  docker compose build
+
+            - name: Upload image to server
+              run: |
+                  docker save tap2test-api:latest \
+                  | gzip \
+                  | ssh -o ServerAliveInterval=15 \
+                          -o ServerAliveCountMax=8 \
+                          ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} \
+                          'gunzip | docker load'
+
+            - name: Upload docker-compose.yml via SSH
+              run: |
+                  cat docker-compose.yml | ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} "cat > ${{ secrets.SERVER_APP_DIRECTORY }}/docker-compose.yml"
+
+            - name: Restart IKEv2 container on server
+              run: |
+                  ssh ${{ secrets.SERVER_USERNAME }}@${{ secrets.SERVER_HOST }} '
+                    cd ${{ secrets.SERVER_APP_DIRECTORY }}
+                    docker compose up -d
+                  '
