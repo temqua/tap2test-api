@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: tap2test-api
+    image: tap2test-api
     ports:
       - "8050:8050"
       - "8051:8051"
